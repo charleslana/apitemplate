@@ -1,5 +1,6 @@
 package com.apitemplate.dto;
 
+import com.apitemplate.enums.RoleEnum;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,7 +21,9 @@ public record RegisterRequestDTO(
         @NotNull(message = "O nome não deve ser nulo.")
         @NotBlank(message = "O nome é obrigatório.")
         @Size(max = 255, message = "O tamanho máximo do nome deve ser 255 caracteres.")
-        String name
+        String name,
+
+        RoleEnum role
 ) {
     public RegisterRequestDTO {
         email = email.trim();

@@ -32,4 +32,15 @@ public class UserController {
         UserRequestDTO userDTO = userService.getAuthenticatedUser();
         return ResponseEntity.ok(userDTO);
     }
+
+    @Operation(summary = "Rota de teste para ADMIN", description = "Apenas usuários com role ADMIN podem acessar")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Acesso autorizado"),
+            @ApiResponse(responseCode = "403", description = "Acesso negado")
+    })
+    @GetMapping("/admin-test")
+    public ResponseEntity<String> adminTest() {
+        log.info("Test route for ADMIN access");
+        return ResponseEntity.ok("Access granted to ADMIN");
+    }
 }

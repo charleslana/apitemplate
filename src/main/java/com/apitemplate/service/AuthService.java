@@ -21,11 +21,11 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
 
-    public ResponseDTO login(LoginRequestDTO body) {
-        User user = repository.findByEmail(body.email())
+    public ResponseDTO login(LoginRequestDTO dto) {
+        User user = repository.findByEmail(dto.email())
                 .orElseThrow(() -> new BusinessException("User not found"));
 
-        if (!passwordEncoder.matches(body.password(), user.getPassword())) {
+        if (!passwordEncoder.matches(dto.password(), user.getPassword())) {
             throw new BusinessException("Invalid credentials");
         }
 
@@ -33,17 +33,20 @@ public class AuthService {
         return new ResponseDTO(user.getName(), token);
     }
 
-    public ResponseDTO register(RegisterRequestDTO body) {
-        Optional<User> existingUser = repository.findByEmail(body.email());
+    public ResponseDTO register(RegisterRequestDTO dto) {
+        Optional<User> existingUser = repository.findByEmail(dto.email());
 
         if (existingUser.isPresent()) {
             throw new BusinessException("User already exists");
         }
 
         User newUser = new User();
-        newUser.setName(body.name());
-        newUser.setEmail(body.email());
-        newUser.setPassword(passwordEncoder.encode(body.password()));
+        newUser.setName(dto.name());
+        newUser.setEmail(dto.email());
+        newUser.setPassword(passwordEncoder.encode(dto.password()));
+        if (dto.role() != null) {
+            newUser.setRole(dto.role());
+        }
         repository.save(newUser);
 
         String token = tokenService.generateToken(newUser);
