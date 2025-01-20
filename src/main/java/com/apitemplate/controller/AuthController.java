@@ -9,7 +9,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthController {
 
     private final AuthService authService;
@@ -30,8 +33,9 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Dados inválidos ou erro de autenticação")
     })
     @PostMapping("/login")
-    public ResponseEntity<ResponseDTO> login(@RequestBody LoginRequestDTO body) {
-        ResponseDTO response = authService.login(body);
+    public ResponseEntity<ResponseDTO> login(@RequestBody @Valid LoginRequestDTO dto) {
+        log.info("REST request to login user: {}", dto);
+        ResponseDTO response = authService.login(dto);
         return ResponseEntity.ok(response);
     }
 
@@ -42,8 +46,9 @@ public class AuthController {
             @ApiResponse(responseCode = "400", description = "Erro ao registrar o usuário")
     })
     @PostMapping("/register")
-    public ResponseEntity<ResponseDTO> register(@RequestBody RegisterRequestDTO body) {
-        ResponseDTO response = authService.register(body);
+    public ResponseEntity<ResponseDTO> register(@RequestBody @Valid RegisterRequestDTO dto) {
+        log.info("REST request to create user: {}", dto);
+        ResponseDTO response = authService.register(dto);
         return ResponseEntity.ok(response);
     }
 }
