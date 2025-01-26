@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -39,8 +41,8 @@ public class UserController {
             @ApiResponse(responseCode = "403", description = "Acesso negado")
     })
     @GetMapping("/admin-test")
-    public ResponseEntity<String> adminTest() {
+    public ResponseEntity<Map<String, String>> adminTest() {
         log.info("Test route for ADMIN access");
-        return ResponseEntity.ok("Access granted to ADMIN");
+        return ResponseEntity.ok(Map.of("message", "Access granted to ADMIN"));
     }
 }
